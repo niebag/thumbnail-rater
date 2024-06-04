@@ -24,6 +24,12 @@ export function Header() {
                         >
                             Create
                         </Link>
+                        <Link
+                            href='/explore'
+                            className='link'
+                        >
+                            Explore
+                        </Link>
                     </SignedIn>
                     <SignedOut>
                         <Link

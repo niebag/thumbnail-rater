@@ -1,11 +1,13 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
+import { paginationOptsValidator } from 'convex/server';
 
 export const createThumbnail = mutation({
     args: {
         title: v.string(),
         aImage: v.string(),
         bImage: v.string(),
+        profileImage: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         const user = await ctx.auth.getUserIdentity();
@@ -22,6 +24,7 @@ export const createThumbnail = mutation({
             aVotes: 0,
             bVotes: 0,
             voteIds: [],
+            profileImage: args.profileImage,
         });
     },
 });
@@ -32,6 +35,18 @@ export const getThumbnail = query({
     },
     handler: async (ctx, args) => {
         return ctx.db.get(args.thumbnailId);
+    },
+});
+
+export const getRecentThumbnails = query({
+    args: {
+        paginationOpts: paginationOptsValidator,
+    },
+    handler: async (ctx, args) => {
+        return ctx.db
+            .query('thumbnails')
+            .order('desc')
+            .paginate(args.paginationOpts);
     },
 });
 
@@ -70,7 +85,7 @@ export const voteOnThumbnail = mutation({
         }
 
         if (thumbnail.voteIds.includes(userId)) {
-            throw new Error("you've already voted")
+            throw new Error("you've already voted");
         }
 
         if (thumbnail.aImage === args.imageId) {
