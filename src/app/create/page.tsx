@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { api } from '../../../convex/_generated/api';
+import { getImageUrl } from '@/lib/utils';
 
 const defaultErrorState = {
     title: '',
@@ -30,7 +31,7 @@ export default function CreatePage() {
     const router = useRouter();
 
     return (
-        <div className='pt-16'>
+        <div className='mt-16'>
             <h1 className='text-4xl font-bold mb-8'>Create a Thumbnail Test</h1>
 
             <p className='text-lg max-w-md mb-8'>
@@ -122,7 +123,7 @@ export default function CreatePage() {
                                 width='200'
                                 height='200'
                                 alt='image test a'
-                                src={`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getImage?storageId=${imageA}`}
+                                src={getImageUrl(imageA)}
                             />
                         )}
 
@@ -159,7 +160,7 @@ export default function CreatePage() {
                                 width='200'
                                 height='200'
                                 alt='image test b'
-                                src={`${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getImage?storageId=${imageB}`}
+                                src={getImageUrl(imageB)}
                             />
                         )}
 
