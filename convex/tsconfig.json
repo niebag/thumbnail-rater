@@ -19,6 +19,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["./**/*"],
+  "include": ["./**/*", "../src/app/footer.tsx"],
   "exclude": ["./_generated"]
 }

@@ -82,10 +82,13 @@ export const fulfill = internalAction({
                     completedEvent.subscription as string
                 );
 
-                await ctx.runMutation(internal.users.updateSubscriptionUsingSubId, {
-                    subscriptionId: subscription.items.data[0]?.price.id,
-                    endsOn: subscription.current_period_end * 1000,
-                });
+                await ctx.runMutation(
+                    internal.users.updateSubscriptionUsingSubId,
+                    {
+                        subscriptionId: subscription.items.data[0]?.price.id,
+                        endsOn: subscription.current_period_end * 1000,
+                    }
+                );
             }
 
             return { success: true };

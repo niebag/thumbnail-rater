@@ -1,38 +1,37 @@
 import { v } from 'convex/values';
 import {
+    ActionCtx,
     MutationCtx,
     QueryCtx,
     internalMutation,
     query,
 } from './_generated/server';
+import { getUserId } from './util';
+import { get } from 'lodash';
+
+const FREE_CREDITS = 5;
 
 export const getUser = query({
     args: {},
     handler: async (ctx, args) => {
-        const user = await ctx.auth.getUserIdentity();
+        const userId = await getUserId(ctx);
 
-        if (!user) {
+        if (!userId) {
             return undefined;
         }
 
-        return ctx.db
-            .query('users')
-            .withIndex('by_userId', (q) => q.eq('userId', user.subject))
-            .first();
+        return getFullUser(ctx, userId);
     },
 });
 
 export const isUserSubscribed = async (ctx: QueryCtx | MutationCtx) => {
-    const user = await ctx.auth.getUserIdentity();
+    const userId = await getUserId(ctx);
 
-    if (!user) {
+    if (!userId) {
         return false;
     }
 
-    const userToCheck = await ctx.db
-        .query('users')
-        .withIndex('by_userId', (q) => q.eq('userId', user.subject))
-        .first();
+    const userToCheck = await getFullUser(ctx, userId);
 
     return (userToCheck?.endsOn ?? 0) > Date.now();
 };
@@ -46,6 +45,7 @@ export const createUser = internalMutation({
         await ctx.db.insert('users', {
             email: args.email,
             userId: args.userId,
+            credits: FREE_CREDITS,
         });
     },
 });
@@ -57,10 +57,7 @@ export const updateSubscription = internalMutation({
         endsOn: v.number(),
     },
     handler: async (ctx, args) => {
-        const user = await ctx.db
-            .query('users')
-            .withIndex('by_userId', (q) => q.eq('userId', args.userId))
-            .first();
+        const user = await getFullUser(ctx, args.userId);
 
         if (!user) {
             throw new Error('no user found with that user id');
@@ -95,3 +92,10 @@ export const updateSubscriptionUsingSubId = internalMutation({
         });
     },
 });
+
+export function getFullUser(ctx: QueryCtx | MutationCtx, userId: string) {
+    return ctx.db
+        .query('users')
+        .withIndex('by_userId', (q) => q.eq('userId', userId))
+        .first();
+}
