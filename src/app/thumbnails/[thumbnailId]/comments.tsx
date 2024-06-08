@@ -22,7 +22,7 @@ import { api } from '../../../../convex/_generated/api';
 import { useToast } from '@/components/ui/use-toast';
 import { formatDistance } from 'date-fns';
 import { useIsSubscribed } from '@/hooks/useIsSubscribed';
-import { UpgradeButton } from '@/components/ui/upgrade-button';
+import { UpgradeButton } from '@/components/upgrade-button';
 
 const formSchema = z.object({
     text: z.string().min(1).max(500),

@@ -1,9 +1,9 @@
 'use client';
 
 import { useAction } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../convex/_generated/api';
 import { useRouter } from 'next/navigation';
-import { Button } from './button';
+import { Button } from './ui/button';
 
 export function UpgradeButton() {
     const pay = useAction(api.stripe.pay);

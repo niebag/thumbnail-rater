@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { getImageUrl } from '@/lib/utils';
 import { useSession } from '@clerk/nextjs';
-import { UpgradeButton } from '@/components/ui/upgrade-button';
+import { UpgradeButton } from '@/components/upgrade-button';
 
 const defaultErrorState = {
     title: '',

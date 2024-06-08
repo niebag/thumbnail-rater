@@ -1,6 +1,6 @@
 'use client';
 
-import { UpgradeButton } from '@/components/ui/upgrade-button';
+import { UpgradeButton } from '@/components/upgrade-button';
 import { useIsSubscribed } from '@/hooks/useIsSubscribed';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
