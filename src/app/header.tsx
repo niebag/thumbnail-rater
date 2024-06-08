@@ -1,10 +1,25 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import { ModeToggle } from './mode-toggle';
+import { useAction, useQuery } from 'convex/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { api } from '../../convex/_generated/api';
+import { ModeToggle } from './mode-toggle';
 
 export function Header() {
+    const pay = useAction(api.stripe.pay);
+    const router = useRouter();
+    const user = useQuery(api.users.getUser);
+
+    async function handleUpgradeClick() {
+        const url = await pay();
+        router.push(url);
+    }
+
+    const isSubscribed = user && (user.endsOn ?? 0) > Date.now();
+
     return (
         <div className='border-b'>
             <div className='h-16 container flex justify-between items-center'>
@@ -49,6 +64,11 @@ export function Header() {
 
                 <div className='flex gap-4 items-center'>
                     <SignedIn>
+                        {!isSubscribed && (
+                            <Button onClick={handleUpgradeClick}>
+                                Upgrade
+                            </Button>
+                        )}
                         <UserButton />
                     </SignedIn>
                     <SignedOut>
